@@ -1,23 +1,23 @@
+-- Inserta solo datos nuevos en la tabla de Destino Reportes.dbo.ResultadosLaboratorio
 USE Reportes
 GO
-TRUNCATE TABLE Reportes.dbo.ResultadosLaboratorio
+--TRUNCATE TABLE Reportes.dbo.ResultadosLaboratorio
 GO
-INSERT INTO 
-	Reportes.dbo.ResultadosLaboratorio (
-	TipoCodigo,
-	NumeroCodigo,
-	Secuencia,
-	CodigoTipoF,
-	NumeroTipoF,
-	Fecha,
-	CodigoUsuario,
-	CodigoArticulo,
-	CodigoParametro,
-	Observacion,
-	Referencia,
-	Parametro,
-	Articulo
-	)
+INSERT INTO Reportes.dbo.ResultadosLaboratorio (
+		 TipoCodigo
+		,NumeroCodigo
+		,Secuencia
+		,CodigoTipoF
+		,NumeroTipoF
+		,Fecha
+		,CodigoUsuario
+		,CodigoArticulo
+		,CodigoParametro
+		,Observacion
+		,Referencia
+		,Parametro
+		,Articulo
+		)
 SELECT
 	 TMRESULTADOSLABORATORIOD.RL2_COD_TIPO
 	,TMRESULTADOSLABORATORIOD.RL2_COD_NUM
@@ -33,4 +33,11 @@ SELECT
 	,TMRESULTADOSLABORATORIOD.RL2_NOM_PARAM
 	,TMRESULTADOSLABORATORIOD.RL2_NOM_ARTIC
 FROM BETANIA.dbo.TMRESULTADOSLABORATORIOD
-WHERE TMRESULTADOSLABORATORIOD.RL2_COD_TIPO IN ('RL','RL8')
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM Reportes.dbo.ResultadosLaboratorio
+    WHERE TMRESULTADOSLABORATORIOD.RL2_COD_TIPO = Reportes.dbo.ResultadosLaboratorio.TipoCodigo
+    AND TMRESULTADOSLABORATORIOD.RL2_COD_NUM = Reportes.dbo.ResultadosLaboratorio.NumeroCodigo
+    AND TMRESULTADOSLABORATORIOD.RL2_SEQ = Reportes.dbo.ResultadosLaboratorio.Secuencia
+    AND TMRESULTADOSLABORATORIOD.RL2_COD_TIPO IN ('RL','RL8')
+)
