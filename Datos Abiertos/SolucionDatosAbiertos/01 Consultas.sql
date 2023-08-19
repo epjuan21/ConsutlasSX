@@ -1,13 +1,6 @@
--- Vista DatosConsultas
+-- Consultas
 USE BETANIA
 GO
---IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID('DatosConsultas'))
---BEGIN
---	DROP VIEW DatosConsultas
---END
---GO
---CREATE VIEW dbo.DatosConsultas
---AS
 SELECT
 	DISTINCT
 	 CONVERT(BIGINT,TIMOVIMIENTOENCAB.MV_COD, 0) Codigo

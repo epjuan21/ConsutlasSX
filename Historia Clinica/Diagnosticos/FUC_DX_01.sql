@@ -84,6 +84,6 @@ RETURN
 );
 
 GO
-SELECT DiagnosticoPrincipal, DiagnosticoRelacionado1, DiagnosticoRelacionado2, DiagnosticoRelacionado3, EdadDias, EdadMeses, Edad, FechaAtencion, Responsable, TipoAtencion, NombreAtencion, Consecutivo FROM dbo.FUC_DX_01('568236','20130101', '20230630', 'E785,E784,E780,E781,E782,E783,E782,E785,E786') ORDER BY FechaAtencion DESC
-
+SELECT TOP 1 CONCAT_WS('-',DiagnosticoPrincipal,DiagnosticoRelacionado1,DiagnosticoRelacionado2,DiagnosticoRelacionado3) Diagnostico,FechaAtencion FROM dbo.FUC_DX_01('568236','20130101', '20230630', 'E785,E784,E780,E781,E782,E783,E782,E785,E786') ORDER BY FechaAtencion DESC
+--SELECT TOP 1 DiagnosticoPrincipal, DiagnosticoRelacionado1, DiagnosticoRelacionado2, DiagnosticoRelacionado3, EdadDias, EdadMeses, Edad, FechaAtencion, Responsable, TipoAtencion, NombreAtencion, Consecutivo FROM dbo.FUC_DX_01('71020647', '20130101', '20230610', '"E785,E784,E780,E781,E782,E783,E782,E785,E786"') ORDER BY FechaAtencion DESC
 --SELECT * FROM TQMOVIMIENTOHC WHERE QM1_COD LIKE '%3369230%' AND QM1_NUM_CONSE = 22 ORDER BY QM1_FCH_FECHA DESC

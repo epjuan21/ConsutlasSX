@@ -25,7 +25,7 @@
 		Nombre Entidad
 	
 	Parámetros
-		Código Usuario
+		Ninguno
 		
 	Tipos de Historia Clínica
 		No Aplica
@@ -42,11 +42,11 @@
 
 USE
 BETANIA
-IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[FUC_US_01]')
+IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[FUC_US_02]')
 AND type in (N'FN', N'IF',N'TF', N'FS', N'FT'))
-DROP FUNCTION dbo.FUC_US_01
+DROP FUNCTION dbo.FUC_US_02
 GO
-CREATE FUNCTION dbo.FUC_US_01 (@Codigo AS VARCHAR(20))
+CREATE FUNCTION dbo.FUC_US_02 ()
 RETURNS TABLE
 AS
 RETURN
@@ -80,6 +80,8 @@ RETURN
 
 	,ISNULL(dbo.TMUSUARIOSFACTURACION.KC2_SEXO, '') AS Sexo
 
+	,TMUSUARIOSFACTURACION.KC2_LUGAR_NCTO AS LugarNacimiento
+
 	,ISNULL(dbo.TKCLIENTES.KC_DIR1,'') AS Direccion
 	,ISNULL(REPLACE(dbo.TKCLIENTES.KC_TEL1,' ',''),'') AS Telefono
 
@@ -92,27 +94,27 @@ RETURN
 		WHEN NULL THEN '6'
 		END) AS CodigoEtnia
 
-	,(CASE dbo.TMUSUARIOSFACTURACION.KC2_COD_ETNIA
-		WHEN '0' THEN 'Ninguno'
-		WHEN '1' THEN 'Indigena'
-		WHEN '2' THEN 'ROM (Gitano)'
-		WHEN '3' THEN 'Raizal'
-		WHEN '4' THEN 'Palenquero de San Basilio'
-		WHEN '5' THEN 'Negro, Mulato, Afrocolmobiano o Afrodescendiente'
-		WHEN '6' THEN 'Ninguno'
-		WHEN NULL THEN 'Ninguno'
-	END) AS Etnia
+		,(CASE dbo.TMUSUARIOSFACTURACION.KC2_COD_ETNIA
+			WHEN '0' THEN 'Ninguno'
+			WHEN '1' THEN 'Indigena'
+			WHEN '2' THEN 'ROM (Gitano)'
+			WHEN '3' THEN 'Raizal'
+			WHEN '4' THEN 'Palenquero de San Basilio'
+			WHEN '5' THEN 'Negro, Mulato, Afrocolmobiano o Afrodescendiente'
+			WHEN '6' THEN 'Ninguno'
+			WHEN NULL THEN 'Ninguno'
+		END) AS Etnia
 
-	,CASE TMUSUARIOSFACTURACION.KC2_ESTADO_CIVIL 
-		WHEN 'S' THEN 'Soltero'
-		WHEN 'C' THEN 'Casado'
-		WHEN 'V' THEN 'Viudo'
-		WHEN 'U' THEN 'Union Libre'
-		WHEN 'D' THEN 'Divorciado'
-		WHEN '' THEN 'Sin Dato'
-		WHEN NULL THEN 'Sin Dato'
-		ELSE 'Sin Dato'
-	END AS EstadoCivil
+		,CASE TMUSUARIOSFACTURACION.KC2_ESTADO_CIVIL 
+			WHEN 'S' THEN 'Soltero'
+			WHEN 'C' THEN 'Casado'
+			WHEN 'V' THEN 'Viudo'
+			WHEN 'U' THEN 'Union Libre'
+			WHEN 'D' THEN 'Divorciado'
+			WHEN '' THEN 'Sin Dato'
+			WHEN NULL THEN 'Sin Dato'
+			ELSE 'Sin Dato'
+		END AS EstadoCivil
 
 	,(CASE dbo.TMUSUARIOSFACTURACION.KC2_GRUPO_ATENCION
 		WHEN 'A' THEN 'Indigente'
@@ -173,9 +175,7 @@ RETURN
 			WHEN '1' THEN '13'
 			WHEN '' THEN '13'
 			ELSE '13'
-	 END) AS CodigoNivelEducativo
-
-	,TMUSUARIOSFACTURACION.KC2_OCUPACION_NV AS Ocupacion
+	END) AS CodigoNivelEducativo
 
 	,(CASE TMENTIDADES.ENT_TIPO 
 		WHEN '1' THEN 'Contributivo' 
@@ -206,12 +206,8 @@ RETURN
 
 	LEFT JOIN TMENTIDADES ON (TMENTIDADES.ENT_COD = TMUSUARIOSFACTURACION.KC2_EPS_POS)
 	
-	WHERE CONVERT(BIGINT, dbo.TKCLIENTES.KC_COD) = @Codigo
-	
-	AND KC_ZONA = '99'
+	WHERE KC_ZONA = '99'
 	
 );
 GO
-SELECT * FROM dbo.FUC_US_01('594607')
-
-SELECT TipoDocumento, PrimerNombre, SegundoNombre, PrimerApellido, SegundoApellido, FechaNacimiento, FechaNacimiento_23, FechaNacimiento_103, FechaNacimiento_105, EdadActual, UnidadEdad, EdadAños, EdadMeses, EdadDias, Unidad, GruposQuinquenales, CicloVida, FrecuenciaEdad, Sexo, Telefono, CodigoEtnia, Etnia, EstadoCivil, GrupoPoblacional, Raza, NivelEducativo, CodigoNivelEducativo, Ocupacion, Regimen, CodigoEntidad, CodigoSupersalud, NombreEntidad FROM dbo.FUC_US_01('594607')
+SELECT TOP 100 * FROM dbo.FUC_US_02()
